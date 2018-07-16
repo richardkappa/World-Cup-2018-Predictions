@@ -1,6 +1,6 @@
 # World Cup 2018 Predictions League
 
-The R code needed to run a predictions league for the 2018 world cup and to make two shiny apps in R to display the results to the competitiors.
+The R code needed to run a predictions league for the 2018 world cup and to make two shiny apps in R to display the results to the competitiors. The data needed by the model is in predictions.zip
 
 # Predictions
 Contains two parts of the shiny app.
