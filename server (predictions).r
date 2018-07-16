@@ -10,14 +10,13 @@ library("readxl")
 shinyServer(function(input, output) {
 
   #Model List
-  ModelList<- read_csv("http://richardkappa.co.uk/wp-content/uploads/2018/06/ModelList-ol.csv")
+  ModelList<- read_csv("/home/rstudio/Predictions/ModelList.csv")
   
   #Import actual Scores
-  A_data  <- "http://richardkappa.co.uk/wp-content/uploads/2018/06/Actuals.csv"
+  A_data  <- "/home/rstudio/Predictions/Actuals.csv"
   names <- c("TeamA",	"TeamB", "ActualA", "ActualB")
   
-  Actual<- read_csv("http://richardkappa.co.uk/wp-content/uploads/2018/06/Actuals.csv")
-  #Actual<- read_excel(paste("~/Dropbox/Predictions/Actuals", ".xlsx", sep=""), 1)
+  Actual<- read_csv(A_data)
   Actual <- Actual[complete.cases(Actual), ]
   names(Actual) <- names
   
@@ -30,7 +29,9 @@ shinyServer(function(input, output) {
   CalcScore <- function(Model){
     
     location <- ModelList[which(ModelList$ModelName == Model),]$ModelFileName
-    location2 <- paste("http://richardkappa.co.uk/wp-content/uploads/2018/06",location, sep="/")
+    location2 <- paste("/home/rstudio/Predictions",location, sep="/")
+    
+    print(Model)
     
     #Import the model
     Model<- read_csv(location2)
@@ -70,9 +71,9 @@ shinyServer(function(input, output) {
     return(toString(list(Score,GD_Error,Exact,Draw,Result)))
   }
   
-  #Score all of the models
-  ModelList$ModelFileName <- gsub(" ", "-", ModelList$ModelFileName)
-  ModelList$ModelFileName <- gsub("'", "", ModelList$ModelFileName)
+#  Score all of the models
+#  ModelList$ModelFileName <- gsub(" ", "-", ModelList$ModelFileName)
+  #ModelList$ModelFileName <- gsub("'", "", ModelList$ModelFileName)
   ModelList$Score <- lapply(ModelList$ModelName,CalcScore)
   
   Results <- as.data.frame(str_split_fixed(ModelList$Score, ",", 5))
@@ -118,6 +119,7 @@ shinyServer(function(input, output) {
     d <- event_data("plotly_hover")
     if (is.null(d)) "Hover on a point!" else d
   })
+  
   
 }  
 )
